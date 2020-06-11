@@ -34,6 +34,8 @@ module FDStructure
      Dual(convert(T, x.v), convert(T, x.dv))
     convert(::Type{Dual{T}}, x::Number) where T =
      Dual(convert(T, x), zero(T))
+    convert(::Type{Array{Dual{T}}}, x::Array{Number}) where T =
+     Array{Dual}.(convert(T, x), zero(T))
     promote_rule(::Type{Dual{T}}, ::Type{R}) where {T,R} =
      Dual{promote_type(T,R)}
 

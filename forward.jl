@@ -25,6 +25,13 @@ function jacobian(f::Function, args::Vector{T}) where {T <:Number}
     hcat(jacobian_columns...)
 end
 
+
+sigmoid(arg) = 1.0 / (1 + exp(-1.0 * arg))
+
+
+softmax(arg::Array{Dual{Float64}}) = exp.(arg) ./ sum(exp.(arg))
+
+
 function testReLu()
     ϵ = Dual(0., 1.)
     x = -1.0:0.05:+1.0
@@ -121,6 +128,29 @@ function testJacobian()
     display(@benchmark $jacobian(x -> $tan.(x), $range))
 end
 
+function testSoftmax()
+
+    A = collect(-10.0:0.1:10.0)
+
+    output = []
+    ϵ = Dual(0., 1.)
+    display(length(A))
+
+    for i in 1:1:length(A)
+        list = convert(Array{Dual{Float64}}, deepcopy(A))
+        # display(list)
+        list[i] = list[i] + ϵ
+        # display(i)
+        # display(list[i])
+        append!(output, softmax(list)[i])
+    end
+
+    display("output")
+    display(output)
+    plot(A, (x->x.v).(output), label = "function values")
+    display(plot!(A, (x->x.dv).(output), label = "function derivative"))
+end
+
 
 function main()
     # testReLu()
@@ -129,45 +159,8 @@ function main()
     # testTan()
     # testRosenbrock()
     # testJacobian()
+    testSoftmax()
 
 end
 
 main()
-
-
-
-
-
-
-# # Softmax - do poprawy
-#
-# softmax(arg) = exp.(arg) ./ sum(exp.(arg))
-# # softmax(arg::Dual) = exp(arg)
-# softmax(arg::Array{Dual{Float64},1}) = exp.(arg) ./ sum(exp.(arg))
-# #! dla każdego innego typu, czyli większych rozmiarów arraya, albo innego typu zmiennych ,  bedzie trzeba napisac funkcję,
-# #! żeby wykluczyć pierwszą linijke, ktora akceptuje wszystko. Jak nie ma dosłownego odwolania do danego typu, i nie ma
-# #! pierwszej linijki to rzuca błędu bo nie ma definicji funkcji, ktora przyjmuje te argumenty
-#
-# A = [1.0, 2.0, 3.0, 4.0, 1.0, 2.0, 3.0]
-# #! pętla po każdym elemencie w wektorze
-# A_dual = @.A + ϵ
-# softmax(A_dual)
-# # println(A_dual);
-# # summ(arg) = exp.(arg) ./  sum(exp.(arg))
-# # summ(@. A + ϵ)
-#
-# typeof(A_dual)
-# softmax(A_dual)
-#
-# plot(1:7, (p->p.v).(softmax(A_dual)), label = "value")
-# plot!(1:7, (p->p.dv).(softmax(A_dual)), label = "partials")
-#
-# soft_dual =  softmax(x .+ ϵ)
-#
-# typeof(soft_dual)
-# s= size(soft_dual)
-# plot(collect(1:s[1]), (p->p.v).(soft_dual), label = "value")
-# plot!(collect(1:s[1]), (p->p.dv).(soft_dual), label = "partial")
-#
-# @benchmark softmax(x .+ ϵ)
-#
