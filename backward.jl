@@ -23,7 +23,7 @@ end
 
 
 function testRosenBrock()
-    v = -1:.2:+1
+    v = -1:0.2:+1
     n = length(v)
     xv = repeat(v, inner=n)
     yv = repeat(v, outer=n)
@@ -36,8 +36,10 @@ function testRosenBrock()
     display(quiver!(xv[:], yv[:], gradient=dz))
 end
 
+
 function main()
     testRosenBrock()
 end
+
 
 main()
