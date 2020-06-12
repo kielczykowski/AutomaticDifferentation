@@ -12,15 +12,15 @@ using BenchmarkTools
 function jacobian(f::Function, args::Vector{T}) where {T <:Number}
     jacobian_columns = Matrix{T}[]
     for i=1:length(args)
-    x = Dual{T}[]
-    for j=1:length(args)
-    seed = (i == j)
-    push!(x, seed ?
-    Dual(args[j], one(args[j])) :
-    Dual(args[j],zero(args[j])) )
-    end
-    column = partials.([f(x)...])
-    push!(jacobian_columns, column[:,:])
+        x = Dual{T}[]
+        for j=1:length(args)
+            seed = (i == j)
+            push!(x, seed ?
+            Dual(args[j], one(args[j])) :
+            Dual(args[j],zero(args[j])) )
+        end
+        column = partials.([f(x)...])
+        push!(jacobian_columns, column[:,:])
     end
     hcat(jacobian_columns...)
 end
