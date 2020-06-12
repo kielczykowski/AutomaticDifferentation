@@ -13,6 +13,15 @@ rosenbrock(x, y) = (Variable(1.0) - x*x) + Variable(100.0)*(y - x*x)*(y - x*x)
 
 
 
+function fgrad(f, x)
+    arg = Variable(x)
+    z = f(arg)
+    backward(z, Variable(1.0))
+    # display(arg.grad)
+    arg.grad
+end
+
+
 function testRosenBrock()
     v = -1:0.2:+1
     n = length(v)
