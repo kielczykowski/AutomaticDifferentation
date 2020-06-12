@@ -1,7 +1,7 @@
 module RDStructure
 
     export Node, LeafNode, Variable, ComputableNode, CachedNode,
-           forward, backward, gradient, value
+           forward, backward, gradient, value, ReLu
 
 
     abstract type Node end
@@ -55,6 +55,16 @@ module RDStructure
     /(y::Float64, x::Variable{Float64}) = /(value(x), y)
 
 
+    # Base.zero(::Type{Variable{T}}) where T = Variable(zero(T))
+    Base.zero(::Variable{Float64}) = Variable(zero(Float64))
+    # zero(::Variable{T}) where T = Variable{T}(zero(T))
+    # Base.zero(::Type{Variable{T}}) where T = Variable{T}(zero(T))
+
+    ReLu(x::Variable) = x.value > zero(x.value) ? x : zero(x)
+
+
+
+
     value(cached::CachedNode) = value(cached.output)
     value(var::Variable) = var.value
     value(var::Float64) = var
@@ -99,5 +109,15 @@ module RDStructure
         end
         nothing
     end
+
+    # # promotion/conversion rules
+    # convert(::Type{Variable{T}}, x::Variable) where T =
+    #  Variable(convert(T, x.value), convert(T, x.grad))
+    # convert(::Type{Variable{T}}, x::Number) where T =
+    #  Variable(convert(T, x), zero(T))
+    # convert(::Type{Array{Variable{T}}}, x::Array{Number}) where T =
+    #  Array{Variable}.(convert(T, x), zero(T))
+    # promote_rule(::Type{Variable{T}}, ::Type{R}) where {T,R} =
+    #  Variable{promote_type(T,R)}
 
 end

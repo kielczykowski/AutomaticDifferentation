@@ -1,10 +1,13 @@
 include("./RDStructure.jl")
 using .RDStructure: Node, LeafNode, Variable, ComputableNode, CachedNode,
-                   forward, backward, gradient, value
+                   forward, backward, gradient, value, ReLu
 using Plots
 
 
 rosenbrock(x, y) = (Variable(1.0) - x*x) + Variable(100.0)*(y - x*x)*(y - x*x)
+
+
+# ReLu(x) = x > zero(x) ? x : zero(x)
 
 
 function fval(f, xv, yv)
@@ -87,11 +90,27 @@ function testTan()
 end
 
 
+function testReLu()
+    x = -1.0:0.05:+1.0
+    # display(ReLu(Variable(-1.0)))
+    # display(ReLu.(V)
+    zv = fval.(ReLu, x)
+    dz = fgrad.(ReLu, x)
+
+    display(zv)
+    display(dz)
+    plot(x, zv, label="values")
+    display(plot!(x, dz, label="derivative"))
+
+end
+
+
 function main()
     # testRosenBrock()
     # testSin()
     # testCos()
-    testTan()
+    # testTan()
+    testReLu()
 end
 
 
