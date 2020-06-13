@@ -19,7 +19,7 @@ function jacobian(f::Function, args::Vector{T}) where {T <:Number}
             Dual(args[j], one(args[j])) :
             Dual(args[j],zero(args[j])) )
         end
-        column = partials.([f(x)...])
+        column = partials.([f.(x)...])
         push!(jacobian_columns, column[:,:])
     end
     hcat(jacobian_columns...)
@@ -97,7 +97,7 @@ end
 
 
 function testJacobian()
-    x= [i for i in -1.0:0.5:1];
+    x = [i for i in -1.0:0.5:1];
     range = [i for i in 0:π/360:2*π] ;
     rangeTan = [i for i in -π/2+π/180:π/180:π/2- π/180];
 
@@ -115,19 +115,19 @@ function testJacobian()
 
     # Jacobi - Sin
     display("Jacobi Sin")
-    y = jacobian(x -> sin.(x), range);
+    y = jacobian(sin, range);
     display(y)
     # display(@benchmark $jacobian(x -> $sin.(x), $range))
 
     # Jacobi - Cos
     display("Jacobi Cos")
-    y = jacobian(x -> cos.(x), range);
+    y = jacobian(cos, range);
     display(y)
     # display(@benchmark $jacobian(x -> $cos.(x), $range))
 
     # Jacobi - Tan
     display("Jacobi Tan")
-    y = jacobian(x -> tan.(x), rangeTan);
+    y = jacobian(tan, rangeTan);
     display(y)
     # display(@benchmark $jacobian(x -> $tan.(x), $range))
 end
