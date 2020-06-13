@@ -136,8 +136,8 @@ function testJacobian()
 
     display("Jacobi Rosenbrock")
     x ,y = jacobian(rosenbrock,xv, yv);
-    display(typeofx))
-    display(typeof(y))
+    @show x
+    # display(typeof(y))
     # display(@benchmark $jacobian($softmax,$x))
 
     display("Jacobi Relu")

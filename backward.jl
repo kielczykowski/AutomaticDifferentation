@@ -86,10 +86,50 @@ function jacobian(f::Function, args::Vector{T}) where {T <:Number}
     hcat(jacobian_columns...)
 end
 
+function jacobian(f::Function, xargs::Vector{T}, yargs::Vector{T}) where {T <:Number}
+    xjacobian_columns = Matrix{T}[]
+    yjacobian_columns = Matrix{T}[]
+    @assert length(xargs) == length(yargs)
+    for i=1:length(xargs)
+        x = T[]
+        y = T[]
+        for j=1:length(xargs)
+            if i == j
+                xval, yval = fgrad(f, xargs[j], yargs[j])
+                push!(x, xval)
+                push!(y, yval)
+            else
+                push!(x, 0.0::T)
+                push!(y, 0.0::T)
+            end
+        end
+        push!(xjacobian_columns, x[:,:])
+        push!(yjacobian_columns, y[:,:])
+    end
+    hcat(xjacobian_columns...)
+    hcat(yjacobian_columns...)
+    xjacobian_columns, yjacobian_columns
+end
+
 function testJacobian()
     x = [i for i in -1.0:0.5:1];
     range = [i for i in 0:π/360:2*π] ;
     rangeTan = [i for i in -π/2+π/180:π/180:π/2- π/180];
+
+    v = -1:0.2:+1
+    n = length(v)
+    xv = repeat(v, inner=n)
+    yv = repeat(v, outer=n)
+
+
+    display("Jacobi Rosenbrock")
+    x, y = jacobian(rosenbrock, xv, yv)
+    @show x
+    # @show y
+
+    display("Jacobi Relu")
+    y = jacobian(ReLu,x);
+    display(y)
 
     display("Jacobi Relu")
     y = jacobian(ReLu,x);
