@@ -1,7 +1,7 @@
 module RDStructure
 
     export Node, LeafNode, Variable, ComputableNode, CachedNode,
-           forward, backward, gradient, value, ReLu
+           forward, backward, gradient, value, ReLu, fval, fgrad
 
 
     abstract type Node end
@@ -108,6 +108,38 @@ module RDStructure
             var.grad = grad
         end
         nothing
+    end
+
+
+    function fval(f, xv, yv)
+        x, y = Variable(xv), Variable(yv)
+        z = f(x, y)
+        value(z)
+    end
+
+
+    function fval(f, x)
+        arg = Variable(x)
+        z = f(arg)
+        value(z)
+    end
+
+
+
+    function fgrad(f, xv, yv)
+        x, y = Variable(xv), Variable(yv)
+        z = f(x, y)
+        backward(z, Variable(1.0))
+        5e-4x.grad, 5e-4y.grad
+    end
+
+
+    function fgrad(f, x)
+        arg = Variable(x)
+        z = f(arg)
+        backward(z, Variable(1.0))
+        # display(arg.grad)
+        arg.grad
     end
 
     # # promotion/conversion rules

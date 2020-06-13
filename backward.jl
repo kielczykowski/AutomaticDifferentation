@@ -1,6 +1,6 @@
 include("./RDStructure.jl")
 using .RDStructure: Node, LeafNode, Variable, ComputableNode, CachedNode,
-                   forward, backward, gradient, value, ReLu
+                   forward, backward, gradient, value, ReLu, fval, fgrad
 using Plots
 
 
@@ -10,36 +10,7 @@ rosenbrock(x, y) = (Variable(1.0) - x*x) + Variable(100.0)*(y - x*x)*(y - x*x)
 # ReLu(x) = x > zero(x) ? x : zero(x)
 
 
-function fval(f, xv, yv)
-    x, y = Variable(xv), Variable(yv)
-    z = f(x, y)
-    value(z)
-end
 
-
-function fval(f, x)
-    arg = Variable(x)
-    z = f(arg)
-    value(z)
-end
-
-
-
-function fgrad(f, xv, yv)
-    x, y = Variable(xv), Variable(yv)
-    z = f(x, y)
-    backward(z, Variable(1.0))
-    5e-4x.grad, 5e-4y.grad
-end
-
-
-function fgrad(f, x)
-    arg = Variable(x)
-    z = f(arg)
-    backward(z, Variable(1.0))
-    # display(arg.grad)
-    arg.grad
-end
 
 
 function testRosenBrock()
