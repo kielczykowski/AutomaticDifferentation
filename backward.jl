@@ -7,12 +7,6 @@ using Plots
 rosenbrock(x, y) = (Variable(1.0) - x*x) + Variable(100.0)*(y - x*x)*(y - x*x)
 
 
-# ReLu(x) = x > zero(x) ? x : zero(x)
-
-
-
-
-
 function testRosenBrock()
     v = -1:0.2:+1
     n = length(v)
@@ -76,12 +70,56 @@ function testReLu()
 end
 
 
+function jacobian(f::Function, args::Vector{T}) where {T <:Number}
+    jacobian_columns = Matrix{T}[]
+    for i=1:length(args)
+        x = T[]
+        for j=1:length(args)
+            if i == j
+                push!(x, fgrad(f, args[j]))
+            else
+                push!(x, 0.0::T)
+            end
+        end
+        push!(jacobian_columns, x[:,:])
+    end
+    hcat(jacobian_columns...)
+end
+
+function testJacobian()
+    x = [i for i in -1.0:0.5:1];
+    range = [i for i in 0:π/360:2*π] ;
+    rangeTan = [i for i in -π/2+π/180:π/180:π/2- π/180];
+
+    display("Jacobi Relu")
+    y = jacobian(ReLu,x);
+    display(y)
+
+    display("Jacobi Sin")
+    y = jacobian(sin, range);
+    display(y)
+    # display(@benchmark $jacobian(x -> $sin.(x), $range))
+
+    # Jacobi - Cos
+    display("Jacobi Cos")
+    y = jacobian(cos, range);
+    display(y)
+    # display(@benchmark $jacobian(x -> $cos.(x), $range))
+
+    # Jacobi - Tan
+    display("Jacobi Tan")
+    y = jacobian(tan, rangeTan);
+    display(y)
+end
+
+
 function main()
     # testRosenBrock()
     # testSin()
     # testCos()
     # testTan()
-    testReLu()
+    # testReLu()
+    testJacobian()
 end
 
 
