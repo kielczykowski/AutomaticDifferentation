@@ -21,6 +21,24 @@ module ReferenceDerivatives
         x > zero(x) ? one(T) : zero(T)
     end
 
+    function dSoftmaxdx(x::Vector{T}) where {T <: Number}
+        derivative_matrix = Matrix{T}[]
+        f_value = softmax(x)
+        for i =1:length(x)
+            col = T[]
+            for j =1:length(x)
+                if i == j
+                    push!(col,f_value[i] * (1.0 - f_value[i]))
+                else
+                    push!(col, -1.0 * f_value[i] * f_value[j])
+                end
+            end
+            # @show x
+            push!(derivative_matrix, col[:,:])
+        end
+        hcat(derivative_matrix...)
+    end
+
 end
 
 
