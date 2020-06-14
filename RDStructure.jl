@@ -1,7 +1,7 @@
 module RDStructure
 
     export Node, LeafNode, Variable, ComputableNode, CachedNode,
-           forward, backward, gradient, value
+           forward, backward, gradient, value, ReLu, fval, fgrad
 
 
     abstract type Node end
@@ -36,18 +36,33 @@ module RDStructure
     end
 
 
-    import Base: +, -, *, /, sin
+    import Base: +, -, *, /, sin, cos, tan
     +(x::Node, y::Node) = register(+, x, y)
     -(x::Node, y::Node) = register(-, x, y)
     *(x::Node, y::Node) = register(*, x, y)
     /(x::Node, y::Node) = register(/, x, y)
-    sin(x::Node) = register(sin,x)
+    sin(x::Node) = register(sin, x)
+    cos(x::Node) = register(cos, x)
+    tan(x::Node) = register(tan, x)
+
 
     +(x::Variable{Float64}, y::Float64) = +(value(x), y)
     *(x::Variable{Float64}, y::Float64) = *(value(x), y)
+    /(x::Variable{Float64}, y::Float64) = /(value(x), y)
 
     +(y::Float64, x::Variable{Float64}) = +(value(x), y)
     *(y::Float64, x::Variable{Float64}) = *(value(x), y)
+    /(y::Float64, x::Variable{Float64}) = /(value(x), y)
+
+
+    # Base.zero(::Type{Variable{T}}) where T = Variable(zero(T))
+    Base.zero(::Variable{Float64}) = Variable(zero(Float64))
+    # zero(::Variable{T}) where T = Variable{T}(zero(T))
+    # Base.zero(::Type{Variable{T}}) where T = Variable{T}(zero(T))
+
+    ReLu(x::Variable) = x.value > zero(x.value) ? x : zero(x)
+
+
 
 
     value(cached::CachedNode) = value(cached.output)
@@ -60,6 +75,9 @@ module RDStructure
     gradient(::typeof(/), grad, x, y) = (grad / y, -1.0 * grad * x / y ^ 2)
     gradient(::typeof(*), grad, x, y) = (grad * y, grad * x)
     gradient(::typeof(sin), grad, x) = (grad * cos(x), )
+    gradient(::typeof(cos), grad, x) = (grad * -1.0 * sin(x), )
+    gradient(::typeof(tan), grad, x) = (grad / (cos(x) ^ 2), )
+
     gradient(cached::CachedNode, grad) =
      gradient(cached.node.operation, grad, map(value, cached.node.attribute)...)
     gradient(op::Function, grad, args...) =
@@ -91,5 +109,47 @@ module RDStructure
         end
         nothing
     end
+
+
+    function fval(f, xv, yv)
+        x, y = Variable(xv), Variable(yv)
+        z = f(x, y)
+        value(z)
+    end
+
+
+    function fval(f, x)
+        arg = Variable(x)
+        z = f(arg)
+        value(z)
+    end
+
+
+
+    function fgrad(f, xv, yv)
+        x, y = Variable(xv), Variable(yv)
+        z = f(x, y)
+        backward(z, Variable(1.0))
+        5e-4x.grad, 5e-4y.grad
+    end
+
+
+    function fgrad(f, x)
+        arg = Variable(x)
+        z = f(arg)
+        backward(z, Variable(1.0))
+        # display(arg.grad)
+        arg.grad
+    end
+
+    # # promotion/conversion rules
+    # convert(::Type{Variable{T}}, x::Variable) where T =
+    #  Variable(convert(T, x.value), convert(T, x.grad))
+    # convert(::Type{Variable{T}}, x::Number) where T =
+    #  Variable(convert(T, x), zero(T))
+    # convert(::Type{Array{Variable{T}}}, x::Array{Number}) where T =
+    #  Array{Variable}.(convert(T, x), zero(T))
+    # promote_rule(::Type{Variable{T}}, ::Type{R}) where {T,R} =
+    #  Variable{promote_type(T,R)}
 
 end

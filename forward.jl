@@ -12,15 +12,15 @@ using BenchmarkTools
 function jacobian(f::Function, args::Vector{T}) where {T <:Number}
     jacobian_columns = Matrix{T}[]
     for i=1:length(args)
-    x = Dual{T}[]
-    for j=1:length(args)
-    seed = (i == j)
-    push!(x, seed ?
-    Dual(args[j], one(args[j])) :
-    Dual(args[j],zero(args[j])) )
-    end
-    column = partials.([f(x)...])
-    push!(jacobian_columns, column[:,:])
+        x = Dual{T}[]
+        for j=1:length(args)
+            seed = (i == j)
+            push!(x, seed ?
+            Dual(args[j], one(args[j])) :
+            Dual(args[j],zero(args[j])) )
+        end
+        column = partials.([f(x)...])
+        push!(jacobian_columns, column[:,:])
     end
     hcat(jacobian_columns...)
 end
@@ -97,14 +97,15 @@ end
 
 
 function testJacobian()
-    x= [i for i in 1:0.5:10];
+    x= [i for i in -1.0:0.5:1];
     range = [i for i in 0:π/360:2*π] ;
     rangeTan = [i for i in -π/2+π/180:π/180:π/2- π/180];
 
     display("Jacobi Relu")
     ReLu(x) = x > zero(x) ? x : zero(x)
     y = jacobian(ReLu,x);
-    display(@benchmark $jacobian($ReLu,$x))
+    display(y)
+    # display(@benchmark $jacobian($ReLu,$x))
 
     # Jacobi - SoftMax
 
@@ -115,17 +116,20 @@ function testJacobian()
     # Jacobi - Sin
     display("Jacobi Sin")
     y = jacobian(x -> sin.(x), range);
-    display(@benchmark $jacobian(x -> $sin.(x), $range))
+    display(y)
+    # display(@benchmark $jacobian(x -> $sin.(x), $range))
 
     # Jacobi - Cos
     display("Jacobi Cos")
     y = jacobian(x -> cos.(x), range);
-    display(@benchmark $jacobian(x -> $cos.(x), $range))
+    display(y)
+    # display(@benchmark $jacobian(x -> $cos.(x), $range))
 
     # Jacobi - Tan
     display("Jacobi Tan")
     y = jacobian(x -> tan.(x), rangeTan);
-    display(@benchmark $jacobian(x -> $tan.(x), $range))
+    display(y)
+    # display(@benchmark $jacobian(x -> $tan.(x), $range))
 end
 
 function testSoftmax()
@@ -158,8 +162,8 @@ function main()
     # testCos()
     # testTan()
     # testRosenbrock()
-    # testJacobian()
-    testSoftmax()
+    testJacobian()
+    # testSoftmax()
 
 end
 
