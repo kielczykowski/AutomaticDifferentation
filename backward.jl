@@ -123,8 +123,8 @@ function testJacobian()
 
 
     display("Jacobi Rosenbrock")
-    x, y = jacobian(rosenbrock, xv, yv)
-    @show x
+    dx, dy = jacobian(rosenbrock, xv, yv)
+    display(dx)
     # @show y
 
     display("Jacobi Relu")

@@ -134,14 +134,17 @@ function testJacobian()
     xv = repeat(v, inner=n)
     yv = repeat(v, outer=n)
 
+    display(xv)
+    display(yv)
+
     display("Jacobi Rosenbrock")
-    x ,y = jacobian(rosenbrock,xv, yv);
-    @show x
+    dx ,dy = jacobian(rosenbrock,xv, yv);
+    display(dx)
     # display(typeof(y))
     # display(@benchmark $jacobian($softmax,$x))
 
     display("Jacobi Relu")
-    x, y = jacobian(ReLu,x);
+    y = jacobian(ReLu,x);
     display(y)
     # display(@benchmark $jacobian($ReLu,$x))
 
