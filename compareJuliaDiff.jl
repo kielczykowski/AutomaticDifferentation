@@ -6,17 +6,12 @@ using ReverseDiff
 
 import Base: sin, cos, tan
 
-# sin(d::ForwardDiff.Dual{T}) where {T} = ForwardDiff.Dual{T}(sin(value(d)), cos(value(d)) * partials(d))
-#
-# sin(d::Array{ForwardDiff.Dual}) = sin.(d)
 
 ReLu(x) = x > zero(x) ? x : zero(x)
 
 Rosenbrock(x, y) = (1.0 - x*x) + 100.0*(y - x*x)*(y - x*x)
 
-# f(x::Vector) = sum(sin, x) + prod(tan, x) * sum(sqrt, x);
-dRosenbrockdx = (x, y) -> ForwardDiff.derivative(Rosenbrock, x, y)
-
+softmax(arg) = exp.(arg) ./ sum(exp.(arg))
 
 
 function forwardModeDerivative()
@@ -28,7 +23,9 @@ function forwardModeDerivative()
     p2 = plot(x, ForwardDiff.derivative.(cos, x), title = "Cos derivative")
     p3 = plot(x, ForwardDiff.derivative.(tan, x), title = "Tan derivative")
     p4 = plot(x, ForwardDiff.derivative.(ReLu, x), title = "ReLu derivative")
-    plot(p1, p2, p3, p4, layout = (2, 2), legend = false)
+    display(plot(p1, p2, p3, p4, layout = (2, 2), legend = false))
+    # y = ForwardDiff.derivative.(softmax, x)
+    # display(y)
     # plot(x, dRosenbrockdx.(x, y))
 
 end
@@ -38,6 +35,8 @@ function reverseModeDerivative()
     rcos(a) = sum(cos.(a))
     rtan(a) = sum(tan.(a))
     rReLu(a) = sum(ReLu.(a))
+    # rsoftmax(a) = sum(softmax.(a))
+
 
     x = collect(-π:0.05:+π)
 
@@ -46,6 +45,9 @@ function reverseModeDerivative()
     p3 = plot(x, ReverseDiff.gradient(rtan, x), title = "Tan Derivative")
     p4 = plot(x, ReverseDiff.gradient(rReLu, x), title = "ReLu Derivative")
     plot(p1, p2, p3, p4, layout = (2, 2), legend = false)
+
+    # y = ReverseDiff.gradient(rsoftmax, x)
+    # display(y)
 
 end
 
@@ -66,6 +68,8 @@ function forwardModeJacobian()
     display(ForwardDiff.jacobian(ftan, x))
     display("Jacobi ReLu")
     display(ForwardDiff.jacobian(fReLu, x))
+    display("Jacobi softmax")
+    display(ForwardDiff.jacobian(softmax, x))
 end
 
 
@@ -84,42 +88,19 @@ function reverseModeJacobian()
     display(ReverseDiff.jacobian(rtan, x))
     display("Jacobi ReLu")
     display(ReverseDiff.jacobian(rReLu, x))
+    # display("Jacobi softmax")
+    # display(ReverseDiff.jacobian(softmax, x))
 
 end
 
-
-function fDiffJacobian()
-    # display("chuj")
-    # x= [i for i in -1.0:0.5:1];
-    range = [i for i in 0:π/360:2*π] ;
-    rangeTan = [i for i in -π/2+π/180:π/180:π/2- π/180];
-    x = Base.Vector(-1.0:0.5:1)
-    display(x)
-    # ForwardDiff.jacobian()
-
-    jacobi = x -> ForwardDiff.derivative(sin, x)
-
-    display("Jacobi Relu")
-    display(jacobi(x))
-end
 
 
 function main()
     # forwardModeDerivative()
     # reverseModeDerivative()
     # reverseModeJacobian()
-    forwardModeJacobian()
-    # fDiffJacobian()
+    # forwardModeJacobian()
 end
 
-# f(x::Vector) = sum(sin, x) + prod(tan, x) * sum(sqrt, x);
-#
-# x = rand(5)
-# display(x)
-# #
+
 main()
-# g = x -> ForwardDiff.gradient(sin, x)
-# #
-# display(g(x))
-# #
-# # display(ForwardDiff.jacobian(f, x))
