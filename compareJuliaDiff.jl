@@ -50,6 +50,25 @@ function reverseModeDerivative()
 end
 
 
+function forwardModeJacobian()
+    x = collect(-π/2:0.05:+π)
+
+    fsin(a) = sin.(a)
+    fcos(a) = cos.(a)
+    ftan(a) = tan.(a)
+    fReLu(a) = ReLu.(a)
+
+    display("Jacobi sin")
+    display(ForwardDiff.jacobian(fsin, x))
+    display("Jacobi cos")
+    display(ForwardDiff.jacobian(fcos, x))
+    display("Jacobi tan")
+    display(ForwardDiff.jacobian(ftan, x))
+    display("Jacobi ReLu")
+    display(ForwardDiff.jacobian(fReLu, x))
+end
+
+
 function reverseModeJacobian()
     x = collect(-π:0.05:+π)
     rsin(a) = sin.(a)
@@ -88,7 +107,8 @@ end
 function main()
     # forwardModeDerivative()
     # reverseModeDerivative()
-    reverseModeJacobian()
+    # reverseModeJacobian()
+    forwardModeJacobian()
     # fDiffJacobian()
 end
 
