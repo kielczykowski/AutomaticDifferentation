@@ -130,7 +130,7 @@ module RDStructure
         x, y = Variable(xv), Variable(yv)
         z = f(x, y)
         backward(z, Variable(1.0))
-        5e-4x.grad, 5e-4y.grad
+        x.grad, y.grad
     end
 
 

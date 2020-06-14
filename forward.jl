@@ -19,10 +19,36 @@ function jacobian(f::Function, args::Vector{T}) where {T <:Number}
             Dual(args[j], one(args[j])) :
             Dual(args[j],zero(args[j])) )
         end
-        column = partials.([f(x)...])
+        column = partials.([f.(x)...])
         push!(jacobian_columns, column[:,:])
     end
     hcat(jacobian_columns...)
+end
+
+function jacobian(f::Function, xargs::Vector{T}, yargs::Vector{T}) where {T <:Number}
+    xjacobian_columns = Matrix{T}[]
+    yjacobian_columns = Matrix{T}[]
+    @assert length(xargs) == length(yargs)
+    for i=1:length(xargs)
+        x = Dual{T}[]
+        y = Dual{T}[]
+        for j=1:length(xargs)
+            seed = (i == j)
+            push!(x, seed ?
+            Dual(xargs[j], one(xargs[j])) :
+            Dual(xargs[j],zero(xargs[j])) )
+            push!(y, seed ?
+            Dual(yargs[j], one(yargs[j])) :
+            Dual(yargs[j],zero(yargs[j])) )
+        end
+        xcolumn = partials.([f.(x, yargs)...])
+        ycolumn = partials.([f.(xargs, y)...])
+        push!(xjacobian_columns, xcolumn[:,:])
+        push!(yjacobian_columns, ycolumn[:,:])
+    end
+    hcat(xjacobian_columns...)
+    hcat(yjacobian_columns...)
+    xjacobian_columns, yjacobian_columns
 end
 
 
@@ -97,12 +123,27 @@ end
 
 
 function testJacobian()
-    x= [i for i in -1.0:0.5:1];
+    x = [i for i in -1.0:0.5:1];
     range = [i for i in 0:π/360:2*π] ;
     rangeTan = [i for i in -π/2+π/180:π/180:π/2- π/180];
 
+
+    rosenbrock(x, y) = (1.0 - x*x) + 100.0*(y - x*x)*(y - x*x)
+    v = -1:.2:+1
+    n = length(v)
+    xv = repeat(v, inner=n)
+    yv = repeat(v, outer=n)
+
+    display(xv)
+    display(yv)
+
+    display("Jacobi Rosenbrock")
+    dx ,dy = jacobian(rosenbrock,xv, yv);
+    display(dx)
+    # display(typeof(y))
+    # display(@benchmark $jacobian($softmax,$x))
+
     display("Jacobi Relu")
-    ReLu(x) = x > zero(x) ? x : zero(x)
     y = jacobian(ReLu,x);
     display(y)
     # display(@benchmark $jacobian($ReLu,$x))
@@ -115,19 +156,19 @@ function testJacobian()
 
     # Jacobi - Sin
     display("Jacobi Sin")
-    y = jacobian(x -> sin.(x), range);
+    y = jacobian(sin, range);
     display(y)
     # display(@benchmark $jacobian(x -> $sin.(x), $range))
 
     # Jacobi - Cos
     display("Jacobi Cos")
-    y = jacobian(x -> cos.(x), range);
+    y = jacobian(cos, range);
     display(y)
     # display(@benchmark $jacobian(x -> $cos.(x), $range))
 
     # Jacobi - Tan
     display("Jacobi Tan")
-    y = jacobian(x -> tan.(x), rangeTan);
+    y = jacobian(tan, rangeTan);
     display(y)
     # display(@benchmark $jacobian(x -> $tan.(x), $range))
 end
