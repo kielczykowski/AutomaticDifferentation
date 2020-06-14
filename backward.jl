@@ -1,10 +1,11 @@
 include("./RDStructure.jl")
 using .RDStructure: Node, LeafNode, Variable, ComputableNode, CachedNode,
-                   forward, backward, gradient, value, ReLu, fval, fgrad
+                   forward, backward, gradient, value, ReLu,
+                   functionValue, functionGradient, Rosenbrock, jacobian
 using Plots
 
 
-rosenbrock(x, y) = (Variable(1.0) - x*x) + Variable(100.0)*(y - x*x)*(y - x*x)
+
 
 
 function testRosenBrock()
@@ -13,8 +14,8 @@ function testRosenBrock()
     xv = repeat(v, inner=n)
     yv = repeat(v, outer=n)
 
-    zv = fval.(rosenbrock, xv, yv)
-    dz = fgrad.(rosenbrock, xv[:], yv[:])
+    zv = functionValue.(Rosenbrock, xv, yv)
+    dz = functionGradient.(Rosenbrock, xv[:], yv[:])
 
     zv = reshape(zv, n, n)
     contour(v, v, zv, fill=true)
@@ -24,8 +25,8 @@ end
 
 function testSin()
     range =  0:π/360:2*π
-    zv = fval.(sin, range)
-    dz = fgrad.(sin, range)
+    zv = functionValue.(sin, range)
+    dz = functionGradient.(sin, range)
 
     # display(dz)
     plot(range, zv, label="values")
@@ -35,8 +36,8 @@ end
 
 function testCos()
     range =  0:π/360:2*π
-    zv = fval.(cos, range)
-    dz = fgrad.(cos, range)
+    zv = functionValue.(cos, range)
+    dz = functionGradient.(cos, range)
 
     # display(zv)
     plot(range, zv, label="values")
@@ -46,8 +47,8 @@ end
 
 function testTan()
     range =  -π/2+0.1:π/360:π/2 - 0.1
-    zv = fval.(tan, range)
-    dz = fgrad.(tan, range)
+    zv = functionValue.(tan, range)
+    dz = functionGradient.(tan, range)
 
     display(zv)
     plot(range, zv, label="values")
@@ -59,8 +60,8 @@ function testReLu()
     x = -1.0:0.05:+1.0
     # display(ReLu(Variable(-1.0)))
     # display(ReLu.(V)
-    zv = fval.(ReLu, x)
-    dz = fgrad.(ReLu, x)
+    zv = functionValue.(ReLu, x)
+    dz = functionGradient.(ReLu, x)
 
     display(zv)
     display(dz)
@@ -70,46 +71,7 @@ function testReLu()
 end
 
 
-function jacobian(f::Function, args::Vector{T}) where {T <:Number}
-    jacobian_columns = Matrix{T}[]
-    for i=1:length(args)
-        x = T[]
-        for j=1:length(args)
-            if i == j
-                push!(x, fgrad(f, args[j]))
-            else
-                push!(x, 0.0::T)
-            end
-        end
-        push!(jacobian_columns, x[:,:])
-    end
-    hcat(jacobian_columns...)
-end
 
-function jacobian(f::Function, xargs::Vector{T}, yargs::Vector{T}) where {T <:Number}
-    xjacobian_columns = Matrix{T}[]
-    yjacobian_columns = Matrix{T}[]
-    @assert length(xargs) == length(yargs)
-    for i=1:length(xargs)
-        x = T[]
-        y = T[]
-        for j=1:length(xargs)
-            if i == j
-                xval, yval = fgrad(f, xargs[j], yargs[j])
-                push!(x, xval)
-                push!(y, yval)
-            else
-                push!(x, 0.0::T)
-                push!(y, 0.0::T)
-            end
-        end
-        push!(xjacobian_columns, x[:,:])
-        push!(yjacobian_columns, y[:,:])
-    end
-    hcat(xjacobian_columns...)
-    hcat(yjacobian_columns...)
-    xjacobian_columns, yjacobian_columns
-end
 
 function testJacobian()
     x = [i for i in -1.0:0.5:1];
@@ -123,7 +85,7 @@ function testJacobian()
 
 
     display("Jacobi Rosenbrock")
-    dx, dy = jacobian(rosenbrock, xv, yv)
+    dx, dy = jacobian(Rosenbrock, xv, yv)
     display(dx)
     # @show y
 
@@ -154,11 +116,11 @@ end
 
 
 function main()
-    # testRosenBrock()
-    # testSin()
-    # testCos()
-    # testTan()
-    # testReLu()
+    testRosenBrock()
+    testSin()
+    testCos()
+    testTan()
+    testReLu()
     testJacobian()
 end
 
