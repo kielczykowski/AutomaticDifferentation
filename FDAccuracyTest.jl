@@ -2,7 +2,8 @@ include("./FDStructure.jl")
 include("./ReferenceDerivatives.jl")
 using .FDStructure: Dual, show, value, partials, ReLu, softmax, jacobian, Rosenbrock
 
-using .ReferenceDerivatives: dsindx, dcosdx, dtandx, dReLudx, dSoftmaxdx
+using .ReferenceDerivatives: dsindx, dcosdx, dtandx, dReLudx, dSoftmaxdx,
+                             dRosenbrockdx, dRosenbrockdy
 
 
 using Statistics
@@ -28,6 +29,7 @@ end
 
 
 function main()
+    ϵ = Dual(0.0, 1.0)
     test_set = collect(0:π/1080:2*π)
     v = 0:π/45:2*π
     n = length(v)
@@ -36,7 +38,7 @@ function main()
 
     t_size = length(test_set)
 
-    display("RDAccuracy Test")
+    display("FDAccuracy Test")
 
     display("Testing set:")
     display("Set size: $t_size")
@@ -55,6 +57,13 @@ function main()
     png("FDAccuracyTangent")
     display("ReLu")
     measureAccuracy(partials.([ReLu(Dual(x,1.0)) for x in test_set]), dReLudx.(test_set))
+
+    display("Rosenbrock dx")
+    measureAccuracy(partials.(Rosenbrock.(xv .+ ϵ, yv)), dRosenbrockdx.(xv, yv))
+    display("Rosenbrock dy")
+    measureAccuracy(partials.(Rosenbrock.(xv , yv.+ ϵ)), dRosenbrockdy.(xv, yv))
+
+
 end
 
 

@@ -4,7 +4,8 @@ using .RDStructure: Node, LeafNode, Variable, ComputableNode, CachedNode,
                    forward, backward, gradient, value, ReLu, softmax,
                    functionValue, functionGradient, Rosenbrock, jacobian
 
-using .ReferenceDerivatives: dsindx, dcosdx, dtandx, dReLudx, dSoftmaxdx
+using .ReferenceDerivatives: dsindx, dcosdx, dtandx, dReLudx, dSoftmaxdx,
+                            dRosenbrockdx, dRosenbrockdy
 
 import Pkg
 Pkg.add("Plots")
@@ -55,9 +56,19 @@ function main()
     display("ReLu")
     measureAccuracy(functionGradient.(ReLu, test_set), dReLudx.(test_set))
 
-    # display("RosenBrock")
-    # xd = functionGradient.(Rosenbrock, xv, yv)
-    # display(xd)
+    display("RosenBrock")
+    d = functionGradient.(Rosenbrock, xv, yv)
+    dx = [x[1] for x in d]
+    dy = [x[2] for x in d]
+    display("Rosenbrock dx")
+    measureAccuracy(dx, 5e-4dRosenbrockdx.(xv, yv))
+    display("Rosenbrock dy")
+    measureAccuracy(dy, 5e-4dRosenbrockdy.(xv, yv))
+
+
+
+    # dRosenbrockdx.(xv, yv)
+    # display(dy)
     # measuerAccuracy()
 end
 
