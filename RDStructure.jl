@@ -59,7 +59,7 @@ module RDStructure
     /(y::Float64, x::Variable{Float64}) = /(value(x), y)
     ^(y::Float64, x::Variable{Float64}) = ^(value(x), y)
 
-    Rosenbrock(x::Variable, y::Variable) =
+    Rosenbrock(x::Variable{Float64}, y::Variable{Float64}) =
         (Variable(1.0) - x * x) + Variable(100.0) * (y - x * x) * (y - x * x)
 
     ReLu(x::Variable) = x.value > zero(x.value) ? x : zero(x)

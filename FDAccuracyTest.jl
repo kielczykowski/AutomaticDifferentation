@@ -1,17 +1,17 @@
-include("./RDStructure.jl")
+include("./FDStructure.jl")
 include("./ReferenceDerivatives.jl")
-using .RDStructure: Node, LeafNode, Variable, ComputableNode, CachedNode,
-                   forward, backward, gradient, value, ReLu, softmax,
-                   functionValue, functionGradient, Rosenbrock, jacobian
+using .FDStructure: Dual, show, value, partials, ReLu, softmax, jacobian, Rosenbrock
 
 using .ReferenceDerivatives: dsindx, dcosdx, dtandx, dReLudx, dSoftmaxdx
+
+
+using Statistics
 
 import Pkg
 Pkg.add("Plots")
 using Plots
 
-Pkg.add("BenchmarkTools")
-using BenchmarkTools
+
 
 function measureAccuracy(x, x̂)
     difference = x .- x̂
@@ -25,6 +25,7 @@ function measureAccuracy(x, x̂)
     display("Max difference")
     display("$maximum")
 end
+
 
 function main()
     test_set = collect(0:π/1080:2*π)
@@ -42,23 +43,18 @@ function main()
 
     display("Derivatives")
     display("Sinus")
-    measureAccuracy(functionGradient.(sin, test_set), dsindx.(test_set))
+    measureAccuracy(partials.([sin(Dual(x,1.0)) for x in test_set]), dsindx.(test_set))
     display("Cosinus")
-    measureAccuracy(functionGradient.(cos, test_set), dcosdx.(test_set))
+    measureAccuracy(partials.([cos(Dual(x,1.0)) for x in test_set]), dcosdx.(test_set))
     display("Tangent")
-    measureAccuracy(functionGradient.(tan, test_set), dtandx.(test_set))
+    measureAccuracy(partials.([tan(Dual(x,1.0)) for x in test_set]), dtandx.(test_set))
     # display("Max Float64 value")
     # display(floatmax(Float64))
-    plot(test_set, functionGradient.(tan, test_set), label = "ReverseAD")
+    plot(test_set, partials.([tan(Dual(x,1.0)) for x in test_set]), label = "ForwardAD")
     plot!(test_set, dtandx.(test_set), label = "Mathematical Derivative")
-    png("RDAccuracyTangent")
+    png("FDAccuracyTangent")
     display("ReLu")
-    measureAccuracy(functionGradient.(ReLu, test_set), dReLudx.(test_set))
-
-    # display("RosenBrock")
-    # xd = functionGradient.(Rosenbrock, xv, yv)
-    # display(xd)
-    # measuerAccuracy()
+    measureAccuracy(partials.([ReLu(Dual(x,1.0)) for x in test_set]), dReLudx.(test_set))
 end
 
 
