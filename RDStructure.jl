@@ -34,11 +34,12 @@ module RDStructure
     end
 
 
-    import Base: +, -, *, /, sin, cos, tan, exp, sum
+    import Base: +, -, *, /, sin, cos, tan, exp, sum, ^, log
     +(x::Node, y::Node) = register(+, x, y)
     -(x::Node, y::Node) = register(-, x, y)
     *(x::Node, y::Node) = register(*, x, y)
     /(x::Node, y::Node) = register(/, x, y)
+    ^(x::Node, y::Node) = register(/, x, y)
     sin(x::Node) = register(sin, x)
     cos(x::Node) = register(cos, x)
     tan(x::Node) = register(tan, x)
@@ -50,11 +51,13 @@ module RDStructure
     *(x::Variable{Float64}, y::Float64) = *(value(x), y)
     /(x::Variable{Float64}, y::Float64) = /(value(x), y)
     exp(x::Variable{Float64}) = exp(value(x))
+    ^(x::Variable{Float64}, y::Float64) = ^(value(x), y)
     # sum(x::Array{Variable{Float64}}) = sum(value.(x))
 
     +(y::Float64, x::Variable{Float64}) = +(value(x), y)
     *(y::Float64, x::Variable{Float64}) = *(value(x), y)
     /(y::Float64, x::Variable{Float64}) = /(value(x), y)
+    ^(y::Float64, x::Variable{Float64}) = ^(value(x), y)
 
     Rosenbrock(x::Variable, y::Variable) =
         (Variable(1.0) - x * x) + Variable(100.0) * (y - x * x) * (y - x * x)
@@ -77,6 +80,7 @@ module RDStructure
     gradient(::typeof(-), grad, x, y) = (grad, grad * -1.0)
     gradient(::typeof(/), grad, x, y) = (grad / y, -1.0 * grad * x / y ^ 2)
     gradient(::typeof(*), grad, x, y) = (grad * y, grad * x)
+    gradient(::typeof(^), grad, x, y) = (grad * y * x ^ (y-1), grad * x ^ y * log(2.0))
     gradient(::typeof(sin), grad, x) = (grad * cos(x), )
     gradient(::typeof(cos), grad, x) = (grad * -1.0 * sin(x), )
     gradient(::typeof(tan), grad, x) = (grad / (cos(x) ^ 2), )

@@ -126,26 +126,26 @@ function benchmarkReverseDiff()
     rReLu(a) = sum(ReLu.(a))
     rRosenbrock(a, b) = sum(Rosenbrock.(a, b))
 
-    # display("Sin small_set derivative")
-    # display(@benchmark ReverseDiff.gradient($rsin, $small_set))
-    # display("Sin medium_set derivative")
-    # display(@benchmark ReverseDiff.gradient($rsin, $medium_set))
-    # display("Sin big_set derivative")
-    # display(@benchmark ReverseDiff.gradient($rsin, $big_set))
-    #
-    # display("Cos small_set derivative")
-    # display(@benchmark ReverseDiff.gradient($rcos, $small_set))
-    # display("cos medium_set derivative")
-    # display(@benchmark ReverseDiff.gradient($rcos, $medium_set))
-    # display("cos big_set derivative")
-    # display(@benchmark ReverseDiff.gradient($rcos, $big_set))
-    #
-    # display("tan small_set derivative")
-    # display(@benchmark ReverseDiff.gradient($rtan, $small_set))
-    # display("tan medium_set derivative")
-    # display(@benchmark ReverseDiff.gradient($rtan, $medium_set))
-    # display("tan big_set derivative")
-    # display(@benchmark ReverseDiff.gradient($rtan, $big_set))
+    display("Sin small_set derivative")
+    display(@benchmark ReverseDiff.gradient($rsin, $small_set))
+    display("Sin medium_set derivative")
+    display(@benchmark ReverseDiff.gradient($rsin, $medium_set))
+    display("Sin big_set derivative")
+    display(@benchmark ReverseDiff.gradient($rsin, $big_set))
+
+    display("Cos small_set derivative")
+    display(@benchmark ReverseDiff.gradient($rcos, $small_set))
+    display("cos medium_set derivative")
+    display(@benchmark ReverseDiff.gradient($rcos, $medium_set))
+    display("cos big_set derivative")
+    display(@benchmark ReverseDiff.gradient($rcos, $big_set))
+
+    display("tan small_set derivative")
+    display(@benchmark ReverseDiff.gradient($rtan, $small_set))
+    display("tan medium_set derivative")
+    display(@benchmark ReverseDiff.gradient($rtan, $medium_set))
+    display("tan big_set derivative")
+    display(@benchmark ReverseDiff.gradient($rtan, $big_set))
 
     display("ReLu small_set derivative")
     display(@benchmark ReverseDiff.gradient($rReLu, $small_set))
@@ -156,11 +156,51 @@ function benchmarkReverseDiff()
 
     display("Rosenbrock derivative")
     display(@benchmark ReverseDiff.gradient($rRosenbrock, ($xv, $yv)))
-    # p2 = plot(x, ReverseDiff.gradient(rcos, x), title = "Cos Derivative")
-    # p3 = plot(x, ReverseDiff.gradient(rtan, x), title = "Tan Derivative")
-    # p4 = plot(x, ReverseDiff.gradient(rReLu, x), title = "ReLu Derivative")
+
+
+    display("Jacobian")
+    rsin(a) = sin.(a)
+    rcos(a) = cos.(a)
+    rtan(a) = tan.(a)
+    rReLu(a) = ReLu.(a)
+    rRosenbrock(a, b) = Rosenbrock.(a, b)
+
+    display("Jacobi small_set sin")
+    display(@benchmark ReverseDiff.jacobian($rsin, $small_set))
+    display("Jacobi medium_set sin")
+    display(@benchmark ReverseDiff.jacobian($rsin, $medium_set))
+    display("Jacobi big_set sin")
+    display(@benchmark ReverseDiff.jacobian($rsin, $big_set))
+
+    display("Jacobi small_set cos")
+    display(@benchmark ReverseDiff.jacobian($rcos, $small_set))
+    display("Jacobi medium_set cos")
+    display(@benchmark ReverseDiff.jacobian($rcos, $medium_set))
+    display("Jacobi big_set cos")
+    display(@benchmark ReverseDiff.jacobian($rcos, $big_set))
+
+    display("Jacobi small_set tan")
+    display(@benchmark ReverseDiff.jacobian($rtan, $small_set))
+    display("Jacobi medium_set tan")
+    display(@benchmark ReverseDiff.jacobian($rtan, $medium_set))
+    display("Jacobi big_set tan")
+    display(@benchmark ReverseDiff.jacobian($rtan, $big_set))
+
+    display("Jacobi small_set ReLu")
+    display(@benchmark ReverseDiff.jacobian($rReLu, $small_set))
+    display("Jacobi medium_set ReLu")
+    display(@benchmark ReverseDiff.jacobian($rReLu, $medium_set))
+    display("Jacobi big_set ReLu")
+    display(@benchmark ReverseDiff.jacobian($rReLu, $big_set))
+
+    display("Jacobi Rosenbrock")
+    display(@benchmark ReverseDiff.jacobian($rRosenbrock, $xv, $yv))
+
 end
 
+function benchmarkForwardDiff()
+
+end
 
 
 function main()
