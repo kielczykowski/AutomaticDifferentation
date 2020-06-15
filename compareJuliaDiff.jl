@@ -31,28 +31,26 @@ function forwardModeDerivative()
 end
 
 function reverseModeDerivative()
-    # rsin(a) = sum(sin.(a))
-    # rcos(a) = sum(cos.(a))
-    # rtan(a) = sum(tan.(a))
-    # rReLu(a) = sum(ReLu.(a))
-    # # rsoftmax(a) = sum(softmax.(a))
-    #
-    #
+    rsin(a) = sum(sin.(a))
+    rcos(a) = sum(cos.(a))
+    rtan(a) = sum(tan.(a))
+    rReLu(a) = sum(ReLu.(a))
+    # rsoftmax(a) = sum(softmax.(a))
+
     v = 0:π/45:2*π
     n = length(v)
     xv = repeat(v, inner=n)
     yv = repeat(v, outer=n)
     #
-    # p1 = plot(x, ReverseDiff.gradient(rsin, x), title = "Sin Derivative")
-    # p2 = plot(x, ReverseDiff.gradient(rcos, x), title = "Cos Derivative")
-    # p3 = plot(x, ReverseDiff.gradient(rtan, x), title = "Tan Derivative")
-    # p4 = plot(x, ReverseDiff.gradient(rReLu, x), title = "ReLu Derivative")
-    # plot(p1, p2, p3, p4, layout = (2, 2), legend = false)
+    p1 = plot(v, ReverseDiff.gradient(rsin, v), title = "Sin Derivative")
+    p2 = plot(v, ReverseDiff.gradient(rcos, v), title = "Cos Derivative")
+    p3 = plot(v, ReverseDiff.gradient(rtan, v), title = "Tan Derivative")
+    p4 = plot(v, ReverseDiff.gradient(rReLu, v), title = "ReLu Derivative")
+    plot(p1, p2, p3, p4, layout = (2, 2), legend = false)
 
     rRosenbrock(x, y) = sum(Rosenbrock.(x, y))
     y = ReverseDiff.gradient(rRosenbrock, (xv, yv))
     display(y)
-
 end
 
 
@@ -97,7 +95,7 @@ function reverseModeJacobian()
 
 end
 
-function benchmarkReverseDiff()
+function benchmarkReverseDiffp1()
     small_set =  collect(0:π/360:2*π)
     medium_set = collect(0:π/1080:2*π)
     big_set = collect(-2 * π:π/3600:2*π)
@@ -157,7 +155,10 @@ function benchmarkReverseDiff()
     display("Rosenbrock derivative")
     display(@benchmark ReverseDiff.gradient($rRosenbrock, ($xv, $yv)))
 
+end
 
+
+function benchmarkReverseDiffp2()
     display("Jacobian")
     rsin(a) = sin.(a)
     rcos(a) = cos.(a)
@@ -195,18 +196,114 @@ function benchmarkReverseDiff()
 
     display("Jacobi Rosenbrock")
     display(@benchmark ReverseDiff.jacobian($rRosenbrock, $xv, $yv))
-
 end
 
+
 function benchmarkForwardDiff()
+    small_set =  collect(0:π/360:2*π)
+    medium_set = collect(0:π/1080:2*π)
+    big_set = collect(-2 * π:π/3600:2*π)
+
+    s_size = length(small_set)
+    m_size = length(medium_set)
+    b_size = length(big_set)
+
+    # Rosenbrock set
+    v = 0:π/45:2*π
+    n = length(v)
+    xv = repeat(v, inner=n)
+    yv = repeat(v, outer=n)
+
+    display("ForwardDiff")
+
+    display("Derivative")
+
+    display("Sin small_set deriv")
+    display(@benchmark ForwardDiff.derivative.(sin, $small_set))
+    display("Sin medium_set deriv")
+    display(@benchmark ForwardDiff.derivative.(sin, $medium_set))
+    display("Sin big_set deriv")
+    display(@benchmark ForwardDiff.derivative.(sin, $big_set))
+
+    display("Cos small_set deriv")
+    display(@benchmark ForwardDiff.derivative.(cos, $small_set))
+    display("Cos medium_set deriv")
+    display(@benchmark ForwardDiff.derivative.(cos, $medium_set))
+    display("Cos big_set deriv")
+    display(@benchmark ForwardDiff.derivative.(cos, $big_set))
+
+    display("Tan small_set deriv")
+    display(@benchmark ForwardDiff.derivative.(tan, $small_set))
+    display("Tan medium_set deriv")
+    display(@benchmark ForwardDiff.derivative.(tan, $medium_set))
+    display("Tan big_set deriv")
+    display(@benchmark ForwardDiff.derivative.(tan, $big_set))
+
+    display("ReLu small_set deriv")
+    display(@benchmark ForwardDiff.derivative.(ReLu, $small_set))
+    display("ReLu medium_set deriv")
+    display(@benchmark ForwardDiff.derivative.(ReLu, $medium_set))
+    display("ReLu big_set deriv")
+    display(@benchmark ForwardDiff.derivative.(ReLu, $big_set))
+
+    ### display("Rosenbrock deriv")
+    ### display(@benchmark ForwardDiff.gradient.(Rosenbrock, ($xv, $yv)))
+
+    display("Jacobian")
+
+    fsin(a) = sin.(a)
+    fcos(a) = cos.(a)
+    ftan(a) = tan.(a)
+    fReLu(a) = ReLu.(a)
+    fRosenbrock(a, b) = Rosenbrock.(a, b)
+
+    display("Jacobi small_set sin")
+    display(@benchmark ForwardDiff.jacobian($fsin, $small_set))
+    display("Jacobi medium_set sin")
+    display(@benchmark ForwardDiff.jacobian($fsin, $medium_set))
+    display("Jacobi big_set sin")
+    display(@benchmark ForwardDiff.jacobian($fsin, $big_set))
+
+    display("Jacobi small_set cos")
+    display(@benchmark ForwardDiff.jacobian($fcos, $small_set))
+    display("Jacobi medium_set cos")
+    display(@benchmark ForwardDiff.jacobian($fcos, $medium_set))
+    display("Jacobi big_set cos")
+    display(@benchmark ForwardDiff.jacobian($fcos, $big_set))
+
+    display("Jacobi small_set tan")
+    display(@benchmark ForwardDiff.jacobian($ftan, $small_set))
+    display("Jacobi medium_set tan")
+    display(@benchmark ForwardDiff.jacobian($ftan, $medium_set))
+    display("Jacobi big_set tan")
+    display(@benchmark ForwardDiff.jacobian($ftan, $big_set))
+
+    display("Jacobi small_set ReLu")
+    display(@benchmark ForwardDiff.jacobian($fReLu, $small_set))
+    display("Jacobi medium_set ReLu")
+    display(@benchmark ForwardDiff.jacobian($fReLu, $medium_set))
+    display("Jacobi big_set ReLu")
+    display(@benchmark ForwardDiff.jacobian($fReLu, $big_set))
+
+    display("Jacobi Rosenbrock")
+    display(@benchmark ForwardDiff.jacobian($fRosenbrock, $xv, $yv))
+
+    display("Jacobi small_set softmax")
+    display(@benchmark ForwardDiff.jacobian(softmax, $small_set))
+    display("Jacobi medium_set softmax")
+    display(@benchmark ForwardDiff.jacobian(softmax, $medium_set))
+    display("Jacobi big_set softmax")
+    display(@benchmark ForwardDiff.jacobian(softmax, $big_set))
 
 end
 
 
 function main()
-    benchmarkReverseDiff()
+    benchmarkReverseDiffp1()
+    benchmarkReverseDiffp2()
+    # benchmarkForwardDiff()
     # forwardModeDerivative()
-    # reverseModeDerivative()
+    reverseModeDerivative()
     # reverseModeJacobian()
     # forwardModeJacobian()
 end

@@ -142,6 +142,13 @@ module RDStructure
         x.grad, y.grad
     end
 
+    function functionGradient(f::typeof(Rosenbrock), xv, yv)
+        x, y = Variable(xv), Variable(yv)
+        z = f(x, y)
+        backward(z, Variable(1.0))
+        5e-4x.grad, 5e-4y.grad
+    end
+
 
     function functionGradient(f::Function, x)
         arg = Variable(x)
