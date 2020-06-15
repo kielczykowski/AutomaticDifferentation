@@ -34,7 +34,7 @@ module RDStructure
     end
 
 
-    import Base: +, -, *, /, sin, cos, tan, exp
+    import Base: +, -, *, /, sin, cos, tan, exp, sum
     +(x::Node, y::Node) = register(+, x, y)
     -(x::Node, y::Node) = register(-, x, y)
     *(x::Node, y::Node) = register(*, x, y)
@@ -43,12 +43,14 @@ module RDStructure
     cos(x::Node) = register(cos, x)
     tan(x::Node) = register(tan, x)
     exp(x::Node) = register(exp, x)
+    # sum(x::Node) = register(sum, x)
 
 
     +(x::Variable{Float64}, y::Float64) = +(value(x), y)
     *(x::Variable{Float64}, y::Float64) = *(value(x), y)
     /(x::Variable{Float64}, y::Float64) = /(value(x), y)
     exp(x::Variable{Float64}) = exp(value(x))
+    # sum(x::Array{Variable{Float64}}) = sum(value.(x))
 
     +(y::Float64, x::Variable{Float64}) = +(value(x), y)
     *(y::Float64, x::Variable{Float64}) = *(value(x), y)
@@ -67,6 +69,8 @@ module RDStructure
     value(cached::CachedNode) = value(cached.output)
     value(var::Variable) = var.value
     value(var::Float64) = var
+    # value(var::Int64) = var
+
 
 
     gradient(::typeof(+), grad, x, y) = (grad, grad)
@@ -77,6 +81,7 @@ module RDStructure
     gradient(::typeof(cos), grad, x) = (grad * -1.0 * sin(x), )
     gradient(::typeof(tan), grad, x) = (grad / (cos(x) ^ 2), )
     gradient(::typeof(exp), grad, x) = (grad * exp(x), )
+    # gradient(::typeof(sum), grad, f, x) = (grad * sum(gradient.(f(x))), )
 
     gradient(cached::CachedNode, grad) =
      gradient(cached.node.operation, grad, map(value, cached.node.attribute)...)

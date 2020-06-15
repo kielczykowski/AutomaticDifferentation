@@ -1,6 +1,7 @@
 module ReferenceDerivatives
 
     import Base: cos, sin, tan, sec, one
+    export dsindx, dcosdx, dtandx, dReLudx, dSoftmaxdx
 
     ReLu(x) = x > zero(x) ? x : zero(x)
     softmax(arg) = exp.(arg) ./ sum(exp.(arg))
@@ -37,6 +38,14 @@ module ReferenceDerivatives
             push!(derivative_matrix, col[:,:])
         end
         hcat(derivative_matrix...)
+    end
+
+    function dRosenbrockdx(x::Vector{T}, y::Vector{T}) where {T <: Number}
+
+    end
+
+    function dRosenbrockdx(x::Vector{T}, y::Vector{T}) where {T <: Number}
+
     end
 
 

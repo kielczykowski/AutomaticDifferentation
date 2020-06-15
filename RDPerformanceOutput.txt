@@ -1,0 +1,379 @@
+"RDPerformance Tests"
+"Testing sets:"
+"Small set size: 721"
+"Medium set size: 2161"
+"Big set size: 14401"
+"Derivatives Calculation"
+"Sinus small set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  5.81 KiB
+  allocs estimate:  1
+  --------------
+  minimum time:     12.511 μs (0.00% GC)
+  median time:      12.960 μs (0.00% GC)
+  mean time:        14.214 μs (0.00% GC)
+  maximum time:     151.606 μs (0.00% GC)
+  --------------
+  samples:          10000
+  evals/sample:     1
+"Sinus medium set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  17.02 KiB
+  allocs estimate:  2
+  --------------
+  minimum time:     41.970 μs (0.00% GC)
+  median time:      42.316 μs (0.00% GC)
+  mean time:        44.903 μs (0.85% GC)
+  maximum time:     1.429 ms (92.18% GC)
+  --------------
+  samples:          10000
+  evals/sample:     1
+"Sinus big set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  112.64 KiB
+  allocs estimate:  2
+  --------------
+  minimum time:     244.041 μs (0.00% GC)
+  median time:      278.563 μs (0.00% GC)
+  mean time:        280.581 μs (0.94% GC)
+  maximum time:     1.791 ms (80.26% GC)
+  --------------
+  samples:          10000
+  evals/sample:     1
+"Cosinus small set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  5.81 KiB
+  allocs estimate:  1
+  --------------
+  minimum time:     11.424 μs (0.00% GC)
+  median time:      12.149 μs (0.00% GC)
+  mean time:        13.349 μs (0.00% GC)
+  maximum time:     151.188 μs (0.00% GC)
+  --------------
+  samples:          10000
+  evals/sample:     1
+"Cosinus medium set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  17.02 KiB
+  allocs estimate:  2
+  --------------
+  minimum time:     33.598 μs (0.00% GC)
+  median time:      34.730 μs (0.00% GC)
+  mean time:        36.937 μs (1.10% GC)
+  maximum time:     1.657 ms (94.26% GC)
+  --------------
+  samples:          10000
+  evals/sample:     1
+"Cosinus big set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  112.64 KiB
+  allocs estimate:  2
+  --------------
+  minimum time:     222.594 μs (0.00% GC)
+  median time:      230.381 μs (0.00% GC)
+  mean time:        246.464 μs (0.98% GC)
+  maximum time:     2.481 ms (88.49% GC)
+  --------------
+  samples:          10000
+  evals/sample:     1
+"Tan small set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  95.94 KiB
+  allocs estimate:  3606
+  --------------
+  minimum time:     38.108 μs (0.00% GC)
+  median time:      44.231 μs (0.00% GC)
+  mean time:        61.237 μs (13.99% GC)
+  maximum time:     7.708 ms (99.02% GC)
+  --------------
+  samples:          10000
+  evals/sample:     1
+"Tan medium set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  287.14 KiB
+  allocs estimate:  10807
+  --------------
+  minimum time:     115.521 μs (0.00% GC)
+  median time:      125.722 μs (0.00% GC)
+  mean time:        155.382 μs (14.65% GC)
+  maximum time:     5.546 ms (97.17% GC)
+  --------------
+  samples:          10000
+  evals/sample:     1
+"Tan big set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  1.87 MiB
+  allocs estimate:  72007
+  --------------
+  minimum time:     759.228 μs (0.00% GC)
+  median time:      832.109 μs (0.00% GC)
+  mean time:        990.378 μs (14.89% GC)
+  maximum time:     6.541 ms (81.61% GC)
+  --------------
+  samples:          5024
+  evals/sample:     1
+"ReLu small set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  28.38 KiB
+  allocs estimate:  723
+  --------------
+  minimum time:     5.058 μs (0.00% GC)
+  median time:      5.756 μs (0.00% GC)
+  mean time:        8.437 μs (25.21% GC)
+  maximum time:     734.164 μs (98.07% GC)
+  --------------
+  samples:          10000
+  evals/sample:     7
+"ReLu medium set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  84.58 KiB
+  allocs estimate:  2164
+  --------------
+  minimum time:     12.652 μs (0.00% GC)
+  median time:      16.545 μs (0.00% GC)
+  mean time:        24.574 μs (23.59% GC)
+  maximum time:     3.424 ms (98.54% GC)
+  --------------
+  samples:          10000
+  evals/sample:     1
+"ReLu big set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  787.70 KiB
+  allocs estimate:  21604
+  --------------
+  minimum time:     122.703 μs (0.00% GC)
+  median time:      141.345 μs (0.00% GC)
+  mean time:        209.856 μs (27.10% GC)
+  maximum time:     5.717 ms (96.36% GC)
+  --------------
+  samples:          10000
+  evals/sample:     1
+"Negative Set ReLu""ReLu small set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  79.00 KiB
+  allocs estimate:  2163
+  --------------
+  minimum time:     12.040 μs (0.00% GC)
+  median time:      15.599 μs (0.00% GC)
+  mean time:        24.393 μs (23.69% GC)
+  maximum time:     4.476 ms (98.83% GC)
+  --------------
+  samples:          10000
+  evals/sample:     1
+"ReLu medium set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  236.45 KiB
+  allocs estimate:  6484
+  --------------
+  minimum time:     38.925 μs (0.00% GC)
+  median time:      47.046 μs (0.00% GC)
+  mean time:        66.796 μs (24.62% GC)
+  maximum time:     5.119 ms (98.63% GC)
+  --------------
+  samples:          10000
+  evals/sample:     1
+"Rosenbrock set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  7.83 MiB
+  allocs estimate:  289841
+  --------------
+  minimum time:     2.228 ms (0.00% GC)
+  median time:      2.387 ms (0.00% GC)
+  mean time:        3.071 ms (20.09% GC)
+  maximum time:     12.569 ms (78.33% GC)
+  --------------
+  samples:          1624
+  evals/sample:     1
+"Jacobian Calculation"
+"Sinus small set benchmark"BenchmarkTools.Trial: 
+  memory estimate:  19.67 MiB
+  allocs estimate:  9392
+  --------------
+  minimum time:     5.231 ms (0.00% GC)
+  median time:      6.057 ms (0.00% GC)
+  mean time:        6.471 ms (11.08% GC)
+  maximum time:     11.462 ms (32.31% GC)
+  --------------
+  samples:          771
+  evals/sample:     1
+"Sinus medium set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  207.92 MiB
+  allocs estimate:  34597
+  --------------
+  minimum time:     53.147 ms (10.64% GC)
+  median time:      65.528 ms (10.88% GC)
+  mean time:        68.696 ms (14.11% GC)
+  maximum time:     198.249 ms (71.03% GC)
+  --------------
+  samples:          73
+  evals/sample:     1
+"Sinus big set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  6.62 GiB
+  allocs estimate:  259241
+  --------------
+  minimum time:     2.719 s (14.41% GC)
+  median time:      3.235 s (25.30% GC)
+  mean time:        3.235 s (25.30% GC)
+  maximum time:     3.751 s (33.19% GC)
+  --------------
+  samples:          2
+  evals/sample:     1
+"Cos small set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  19.67 MiB
+  allocs estimate:  9392
+  --------------
+  minimum time:     5.201 ms (0.00% GC)
+  median time:      5.829 ms (0.00% GC)
+  mean time:        6.631 ms (11.26% GC)
+  maximum time:     13.392 ms (26.29% GC)
+  --------------
+  samples:          753
+  evals/sample:     1
+"Cos medium set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  207.92 MiB
+  allocs estimate:  34597
+  --------------
+  minimum time:     55.838 ms (5.73% GC)
+  median time:      62.602 ms (9.16% GC)
+  mean time:        65.375 ms (13.04% GC)
+  maximum time:     210.141 ms (71.52% GC)
+  --------------
+  samples:          77
+  evals/sample:     1
+"Cos big set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  6.62 GiB
+  allocs estimate:  259241
+  --------------
+  minimum time:     2.639 s (14.83% GC)
+  median time:      3.029 s (22.26% GC)
+  mean time:        3.029 s (22.26% GC)
+  maximum time:     3.420 s (28.00% GC)
+  --------------
+  samples:          2
+  evals/sample:     1
+"Tan small set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  19.76 MiB
+  allocs estimate:  12997
+  --------------
+  minimum time:     5.698 ms (0.00% GC)
+  median time:      6.464 ms (0.00% GC)
+  mean time:        7.349 ms (9.99% GC)
+  maximum time:     14.144 ms (20.85% GC)
+  --------------
+  samples:          680
+  evals/sample:     1
+"Tan medium set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  208.18 MiB
+  allocs estimate:  45402
+  --------------
+  minimum time:     50.422 ms (5.45% GC)
+  median time:      53.337 ms (10.71% GC)
+  mean time:        55.208 ms (9.65% GC)
+  maximum time:     68.114 ms (13.10% GC)
+  --------------
+  samples:          91
+  evals/sample:     1
+"Tan big set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  6.62 GiB
+  allocs estimate:  331246
+  --------------
+  minimum time:     2.605 s (14.48% GC)
+  median time:      2.838 s (21.92% GC)
+  mean time:        2.838 s (21.92% GC)
+  maximum time:     3.070 s (28.23% GC)
+  --------------
+  samples:          2
+  evals/sample:     1
+"ReLu small set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  19.69 MiB
+  allocs estimate:  10114
+  --------------
+  minimum time:     5.249 ms (0.00% GC)
+  median time:      5.663 ms (0.00% GC)
+  mean time:        6.534 ms (9.74% GC)
+  maximum time:     14.025 ms (36.17% GC)
+  --------------
+  samples:          764
+  evals/sample:     1
+"ReLu medium set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  207.98 MiB
+  allocs estimate:  36759
+  --------------
+  minimum time:     47.734 ms (6.09% GC)
+  median time:      51.075 ms (9.65% GC)
+  mean time:        51.684 ms (8.92% GC)
+  maximum time:     65.323 ms (7.54% GC)
+  --------------
+  samples:          97
+  evals/sample:     1
+"ReLu big set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  6.62 GiB
+  allocs estimate:  280843
+  --------------
+  minimum time:     2.635 s (14.53% GC)
+  median time:      2.991 s (21.90% GC)
+  mean time:        2.991 s (21.90% GC)
+  maximum time:     3.347 s (27.70% GC)
+  --------------
+  samples:          2
+  evals/sample:     1
+"Rosenbrock set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  6.11 GiB
+  allocs estimate:  579717
+  --------------
+  minimum time:     1.972 s (15.33% GC)
+  median time:      2.135 s (14.28% GC)
+  mean time:        2.119 s (15.02% GC)
+  maximum time:     2.250 s (13.55% GC)
+  --------------
+  samples:          3
+  evals/sample:     1
+"Softmax using predefined derivatives"
+"Softmax small set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  19.69 MiB
+  allocs estimate:  8675
+  --------------
+  minimum time:     6.308 ms (0.00% GC)
+  median time:      6.645 ms (0.00% GC)
+  mean time:        7.659 ms (9.24% GC)
+  maximum time:     16.985 ms (28.03% GC)
+  --------------
+  samples:          652
+  evals/sample:     1
+"Softmax medium set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  207.98 MiB
+  allocs estimate:  32444
+  --------------
+  minimum time:     69.135 ms (5.84% GC)
+  median time:      80.152 ms (7.93% GC)
+  mean time:        79.063 ms (7.51% GC)
+  maximum time:     90.390 ms (6.68% GC)
+  --------------
+  samples:          64
+  evals/sample:     1
+"Softmax big set benchmark"
+BenchmarkTools.Trial: 
+  memory estimate:  6.62 GiB
+  allocs estimate:  244848
+  --------------
+  minimum time:     2.970 s (12.71% GC)
+  median time:      3.532 s (25.56% GC)
+  mean time:        3.532 s (25.56% GC)
+  maximum time:     4.094 s (34.89% GC)
+  --------------
+  samples:          2
+  evals/sample:     1

@@ -16,6 +16,7 @@ function testRosenBrock()
 
     zv = functionValue.(Rosenbrock, xv, yv)
     dz = functionGradient.(Rosenbrock, xv[:], yv[:])
+    display(dz)
 
     zv = reshape(zv, n, n)
     contour(v, v, zv, fill=true)
@@ -117,11 +118,11 @@ end
 
 function main()
     testRosenBrock()
-    testSin()
-    testCos()
-    testTan()
-    testReLu()
-    testJacobian()
+    # testSin()
+    # testCos()
+    # testTan()
+    # testReLu()
+    # testJacobian()
 end
 
 
